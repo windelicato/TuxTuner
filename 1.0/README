@@ -1,0 +1,12 @@
+Simple guitar tuner implemented in C++.
+
+Uses RtAudio API written by Gary P. Scavone, McGill University ©2001-2010
+http://www.music.mcgill.ca/~gary/rtaudio/
+
+Uses KISS_FFT Library written by Mark Borgerding
+http://sourceforge.net/projects/kissfft/
+
+
+
+
+©2011-2012 Bill Indelicato, Bucknell University

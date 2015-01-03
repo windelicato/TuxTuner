@@ -193,7 +193,7 @@ float run()
 		adc.startStream();
 	}
 
-	catch ( RtError& e ) {
+	catch ( .../*RtError& e*/ ) {
 		//e.printMessage();
 		exit( 0 );
 	}
@@ -209,7 +209,7 @@ float run()
 
 		adc.stopStream();
 	}
-	catch (RtError& e) {
+	catch ( .../*RtError& e*/ ) {
 		//e.printMessage();
 		clean(adc, d);
 	}

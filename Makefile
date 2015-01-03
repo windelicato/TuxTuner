@@ -6,14 +6,26 @@ KISSDIR = kiss_fft130
 
 LIBRTAUDIO = $(RTAUDIO)/librtaudio.a
 
-OBJECTS	=	$(LIBRTAUDIO) $(KISSDIR)/kiss_fft.o $(KISSDIR)/kiss_fftr.o
+OBJECTS = $(LIBRTAUDIO) $(KISSDIR)/kiss_fft.o $(KISSDIR)/kiss_fftr.o
 
 CC       = g++
-DEFS     =   -DHAVE_GETTIMEOFDAY -D__LINUX_ALSA__
-CFLAGS   = -g -O2 -Wall -framework CoreAudio -framework CoreServices
-CFLAGS  += -I$(KISSDIR) -I$(KISSDIR)/tools -I$(RTAUDIO)
-#LIBRARY  = -lpthread -lasound -lm
+DEFS     = -DHAVE_GETTIMEOFDAY
+CFLAGS   = -g -O2 -Wall
 LIBRARY  = -lpthread -lm
+
+ifeq ($(OS),Windows_NT)
+    DEFS += -DWIN32
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Darwin)
+        CFLAGS += -framework CoreAudio -framework CoreServices
+    else
+        LIBRARY += -lasound
+        DEFS    += -D__LINUX_ALSA__
+    endif
+endif
+
+CFLAGS  += -I$(KISSDIR) -I$(KISSDIR)/tools -I$(RTAUDIO)
 
 all : $(PROGRAMS)
 
@@ -42,10 +54,10 @@ $(KISSDIR): | $(KISSDIR).zip
 	unzip $(KISSDIR).zip
 
 clean : | $(RTAUDIO)/Makefile
-	$(RM)	-f *.txt
+	$(RM) -f *.txt
 	make --directory=$(RTAUDIO) clean
 	make --directory=$(KISSDIR) clean
-	$(RM)	-f $(OBJECTS)
+	$(RM) -f $(OBJECTS)
 
 strip : 
 	strip $(PROGRAMS)

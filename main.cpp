@@ -1,15 +1,13 @@
-#include "RtAudio.h"
-#include "kiss_fft.h"
-#include "kiss_fftr.h"
+#include <RtAudio.h>
+#include <kiss_fft.h>
+#include <kiss_fftr.h>
+#include <cmath>
+#include <complex>
+#include <fstream>
 #include <iostream>
 #include <string>
-//#include <cstdlib>
-//#include <cstring>
-#include <complex>
-#include <cmath>
-#include <fstream>
-//#include<stdio.h>
-#include<unistd.h>
+#include <unistd.h>
+
 #define PI 3.14592653589
 
 using namespace std;

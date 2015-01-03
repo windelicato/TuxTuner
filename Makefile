@@ -58,6 +58,8 @@ $(KISSDIR):
 
 clean : | $(RTAUDIO)/Makefile
 	$(RM) -f *.txt
+	$(RM) -f $(PROGRAMS)
+	$(RM) -rf main.dSYM
 	make --directory=$(RTAUDIO) clean
 	make --directory=$(KISSDIR) clean
 	$(RM) -f $(OBJECTS)

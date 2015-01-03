@@ -2,7 +2,7 @@ PROGRAMS = main
 RM = /bin/rm
 SRC_PATH = . 
 RTAUDIO = rtaudio-4.1.1
-KISSDIR = kiss_fft130
+KISSDIR = kissfft-code
 
 LIBRTAUDIO = $(RTAUDIO)/librtaudio.a
 
@@ -29,10 +29,13 @@ CFLAGS  += -I$(KISSDIR) -I$(KISSDIR)/tools -I$(RTAUDIO)
 
 all : $(PROGRAMS)
 
-$(KISSDIR)/kiss_fft.o: $(KISSDIR)/kiss_fft.c | $(KISSDIR)
+$(KISSDIR)/kiss_fft.c: | $(KISSDIR)
+$(KISSDIR)/tools/kiss_fftr.c: | $(KISSDIR)
+
+$(KISSDIR)/kiss_fft.o: $(KISSDIR)/kiss_fft.c
 	cd $(KISSDIR); gcc -c kiss_fft.c -o kiss_fft.o
 
-$(KISSDIR)/kiss_fftr.o: $(KISSDIR)/tools/kiss_fftr.c | $(KISSDIR)
+$(KISSDIR)/kiss_fftr.o: $(KISSDIR)/tools/kiss_fftr.c
 	cd $(KISSDIR); gcc -c tools/kiss_fftr.c -I. -o kiss_fftr.o
 
 main : main.cpp $(OBJECTS)
@@ -50,8 +53,8 @@ $(RTAUDIO)/Makefile: | $(RTAUDIO)
 $(LIBRTAUDIO): $(RTAUDIO)/Makefile
 	make --directory=$(RTAUDIO)
 
-$(KISSDIR): | $(KISSDIR).zip
-	unzip $(KISSDIR).zip
+$(KISSDIR):
+	hg clone http://hg.code.sf.net/p/kissfft/code kissfft-code
 
 clean : | $(RTAUDIO)/Makefile
 	$(RM) -f *.txt

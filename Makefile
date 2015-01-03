@@ -1,35 +1,30 @@
 PROGRAMS = main 
 RM = /bin/rm
 SRC_PATH = . 
-INCLUDE = include/
-OBJECT_PATH = include/
-vpath %.o $(OBJECT_PATH)
 RTAUDIO = rtaudio-4.1.1
+KISSDIR = kiss_fft130
 
 LIBRTAUDIO = $(RTAUDIO)/librtaudio.a
 
-OBJECTS	=	$(LIBRTAUDIO) kiss_fft.o kiss_fftr.o
+OBJECTS	=	$(LIBRTAUDIO) $(KISSDIR)/kiss_fft.o $(KISSDIR)/kiss_fftr.o
 
 CC       = g++
 DEFS     =   -DHAVE_GETTIMEOFDAY -D__LINUX_ALSA__
-CFLAGS   = -g -O2 -Wall
-CFLAGS  += -I$(INCLUDE) -Iinclude/
-LIBRARY  = -lpthread -lasound -lm 
-
-#%.o : $(SRC_PATH)/%.cpp
-	##$(CC) $(CFLAGS) $(DEFS) -c $(<) -o $(OBJECT_PATH)/$@
-
-#%.o : /include/%.cpp
-	##$(CC) $(CFLAGS) $(DEFS) -c $(<) -o $(OBJECT_PATH)/$@
-kiss_fft.o: include/kiss_fft.c include/_kiss_fft_guts.h
-	gcc -c include/kiss_fftr.c -o include/kiss_fft.o
-kiss_fftr.o: include/kiss_fft.c include/_kiss_fft_guts.h
-	gcc -c include/kiss_fft.c -o include/kiss_fftr.o
+CFLAGS   = -g -O2 -Wall -framework CoreAudio -framework CoreServices
+CFLAGS  += -I$(KISSDIR) -I$(KISSDIR)/tools -I$(RTAUDIO)
+#LIBRARY  = -lpthread -lasound -lm
+LIBRARY  = -lpthread -lm
 
 all : $(PROGRAMS)
 
+$(KISSDIR)/kiss_fft.o: $(KISSDIR)/kiss_fft.c | $(KISSDIR)
+	cd $(KISSDIR); gcc -c kiss_fft.c -o kiss_fft.o
+
+$(KISSDIR)/kiss_fftr.o: $(KISSDIR)/tools/kiss_fftr.c | $(KISSDIR)
+	cd $(KISSDIR); gcc -c tools/kiss_fftr.c -I. -o kiss_fftr.o
+
 main : main.cpp $(OBJECTS)
-	$(CC) $(CFLAGS) $(DEFS) -o main main.cpp $(OBJECT_PATH)*.o $(LIBRARY)
+	$(CC) $(CFLAGS) $(DEFS) -o main main.cpp $(OBJECTS) $(LIBRARY)
 	
 $(RTAUDIO).tar.gz:
 	curl http://www.music.mcgill.ca/~gary/rtaudio/release/$(RTAUDIO).tar.gz --output $(RTAUDIO).tar.gz
@@ -43,11 +38,14 @@ $(RTAUDIO)/Makefile: | $(RTAUDIO)
 $(LIBRTAUDIO): $(RTAUDIO)/Makefile
 	make --directory=$(RTAUDIO)
 
+$(KISSDIR): | $(KISSDIR).zip
+	unzip $(KISSDIR).zip
+
 clean : | $(RTAUDIO)/Makefile
 	$(RM)	-f *.txt
 	make --directory=$(RTAUDIO) clean
-	
-
+	make --directory=$(KISSDIR) clean
+	$(RM)	-f $(OBJECTS)
 
 strip : 
 	strip $(PROGRAMS)

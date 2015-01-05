@@ -1,21 +1,21 @@
 PROGRAMS = test
-SRC_PATH = .
-INCLUDE = ../include/
-OBJECT_PATH = ../include/
-vpath %.o $(OBJECT_PATH)
+KISSDIR = ../kissfft-code
 
-OBJECTS = kiss_fft.o kiss_fftr.o
+OBJECTS = $(KISSDIR)/kiss_fft.o $(KISSDIR)/kiss_fftr.o
 
 CC 	= g++
-CFLAGS 	= -g -O2 -Wall -I$(INCLUDE)
+CFLAGS 	= -g -O2 -Wall -I$(KISSDIR) -I$(KISSDIR)/tools
 
 all : $(PROGRAMS)
 
-kiss_fft.o: ../include/kiss_fft.c ../include/_kiss_fft_guts.h
-	gcc -c ../include/kiss_fft.c -o ../include/_kiss_fft_guts.h
+$(KISSDIR)/kiss_fft.o: $(KISSDIR)/kiss_fft.c
+	cd $(KISSDIR); gcc -c kiss_fft.c -o kiss_fft.o
 
-kiss_fftr.o: ../include/kiss_fftr.c ../include/_kiss_fft_guts.h
-	gcc -c ../include/kiss_fftr.c -o ../include/_kiss_fft_guts.h
+$(KISSDIR)/kiss_fftr.o: $(KISSDIR)/tools/kiss_fftr.c
+	cd $(KISSDIR); gcc -c tools/kiss_fftr.c -I. -o kiss_fftr.o
 
-test:	test.cpp $(OBJECTPATH)kiss_fft.o $(OBJECTPATH)kiss_fftr.o
-	$(CC) $(CFLAGS) -o test test.cpp ../include/kiss_fft.o ../include/kiss_fftr.o
+test:	test.cpp $(OBJECTS)
+	$(CC) $(CFLAGS) -o test test.cpp $(OBJECTS)
+
+clean:
+	rm -f $(PROGRAMS)

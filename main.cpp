@@ -1,15 +1,13 @@
-#include "RtAudio.h"
-#include "include/kiss_fft.h"
-#include "include/kiss_fftr.h"
+#include <RtAudio.h>
+#include <kiss_fft.h>
+#include <kiss_fftr.h>
+#include <cmath>
+#include <complex>
+#include <fstream>
 #include <iostream>
 #include <string>
-//#include <cstdlib>
-//#include <cstring>
-#include <complex>
-#include <cmath>
-#include <fstream>
-//#include<stdio.h>
-#include<unistd.h>
+#include <unistd.h>
+
 #define PI 3.14592653589
 
 using namespace std;
@@ -193,7 +191,7 @@ float run()
 		adc.startStream();
 	}
 
-	catch ( RtError& e ) {
+	catch ( .../*RtError& e*/ ) {
 		//e.printMessage();
 		exit( 0 );
 	}
@@ -209,7 +207,7 @@ float run()
 
 		adc.stopStream();
 	}
-	catch (RtError& e) {
+	catch ( .../*RtError& e*/ ) {
 		//e.printMessage();
 		clean(adc, d);
 	}
@@ -291,7 +289,11 @@ int main(int argc, const char *argv[])
 		float FUND = findFund( freq );
 		if(NOTE != "0") 
 		{
-			system("clear");
+			int ret = system("clear");
+			if (-1 == ret) {
+				cerr << "Unable to clear" << endl;
+				return ret;
+                        }
 			
 			cout << NOTE << endl;
 			cout << freq << endl; 

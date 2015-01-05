@@ -3,8 +3,8 @@
 #include<ctime>
 #include<cstdlib>
 #include<complex>
-#include<../include/kiss_fft.h>
-#include<../include/kiss_fftr.h>
+#include<kiss_fft.h>
+#include<kiss_fftr.h>
 #define PI 3.1459265
 
 using namespace std;
@@ -136,7 +136,10 @@ clock_t kiss(float* sig, int NFFT)
 
 int main(int argc, const char *argv[])
 {
-
+	if (argc != 2) {
+		cerr << "Must supply argument" << endl;
+		return 1;
+        }
 	int NFFT = atoi(argv[1]);
 	float* sig = cosine(NFFT);
 	complex<float>* x = new complex<float>[NFFT];

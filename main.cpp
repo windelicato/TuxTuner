@@ -289,7 +289,11 @@ int main(int argc, const char *argv[])
 		float FUND = findFund( freq );
 		if(NOTE != "0") 
 		{
-			system("clear");
+			int ret = system("clear");
+			if (-1 == ret) {
+				cerr << "Unable to clear" << endl;
+				return ret;
+                        }
 			
 			cout << NOTE << endl;
 			cout << freq << endl; 

@@ -3,8 +3,8 @@
 #include<ctime>
 #include<cstdlib>
 #include<complex>
-#include<../include/kiss_fft.h>
-#include<../include/kiss_fftr.h>
+#include<kiss_fft.h>
+#include<kiss_fftr.h>
 #define PI 3.1459265
 
 using namespace std;

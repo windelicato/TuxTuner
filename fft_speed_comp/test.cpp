@@ -136,7 +136,10 @@ clock_t kiss(float* sig, int NFFT)
 
 int main(int argc, const char *argv[])
 {
-
+	if (argc != 2) {
+		cerr << "Must supply argument" << endl;
+		return 1;
+        }
 	int NFFT = atoi(argv[1]);
 	float* sig = cosine(NFFT);
 	complex<float>* x = new complex<float>[NFFT];

@@ -1,5 +1,4 @@
 PROGRAMS = test
-SRC_PATH = .
 KISSDIR = ../kissfft-code
 
 OBJECTS = $(KISSDIR)/kiss_fft.o $(KISSDIR)/kiss_fftr.o
@@ -17,3 +16,6 @@ $(KISSDIR)/kiss_fftr.o: $(KISSDIR)/tools/kiss_fftr.c
 
 test:	test.cpp $(OBJECTS)
 	$(CC) $(CFLAGS) -o test test.cpp $(OBJECTS)
+
+clean:
+	rm -f $(PROGRAMS)
